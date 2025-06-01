@@ -58,18 +58,21 @@ python sound.py --label "fire alarm" "explosion" --num 10 --exclude "speech"
 ---
 
 ## 설치 및 환경 준비
+
 Python 3.x
 
 가상환경(venv)에서 작업하는 것을 권장합니다.
 
+### 가상환경 생성 및 활성화
+
 ```bash
 python -m venv venv
 
-# macOS/Linux
-source venv/bin/activate
+# macOS / Linux
+# source venv/bin/activate
 
-# Windows
-.\venv\Scripts\activate  
+# Windows (PowerShell)
+# .\venv\Scripts\activate```
 - 필수 패키지 설치:
 
 ```bash
