@@ -68,11 +68,15 @@ Python 3.x
 ```bash
 python -m venv venv
 
-# macOS / Linux 활성화
-# source venv/bin/activate
+macOS / Linux 활성화
 
-# Windows (PowerShell) 활성화
-# .\venv\Scripts\activate
+source venv/bin/activate
+
+Windows (PowerShell) 활성화
+
+.\venv\Scripts\activate
+
+필수 패키지 설치
 
 pip install -r requirements.txt
 
