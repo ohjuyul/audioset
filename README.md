@@ -14,7 +14,7 @@
 예를 들어, 아래처럼 실행합니다:
 
 ```bash
-python sound.py --label "fire alarm" "explosion" --num 10 --exclude "speech"
+python sound.py --label "fire alarm" "explosion" --num 10 --exclude "speech"```
 위 명령어는 "fire alarm"과 "explosion" 라벨 중 10개씩 다운로드하며 "speech" 라벨은 제외합니다.
 
 2. resample.py — 최적화된 리샘플링
@@ -49,9 +49,7 @@ Python 3.x
 
 필수 패키지 설치:
 
-bash
-복사
-pip install -r requirements.txt
+```pip install -r requirements.txt```
 (requirements.txt에는 soundfile, numpy, scipy, tqdm, pandas 등이 포함되어 있습니다.)
 
 시스템에 yt-dlp와 ffmpeg 설치 필수 (유튜브 다운로드 및 오디오 편집 도구)
