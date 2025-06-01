@@ -63,22 +63,18 @@ Python 3.x
 
 가상환경(venv)에서 작업하는 것을 권장합니다.
 
-### 가상환경 생성 및 활성화
+### 가상환경 생성 및 활성화, 필수 패키지 설치
 
 ```bash
 python -m venv venv
 
-# macOS / Linux
+# macOS / Linux 활성화
 # source venv/bin/activate
 
-# Windows (PowerShell)
-# .\venv\Scripts\activate```
-- 필수 패키지 설치:
+# Windows (PowerShell) 활성화
+# .\venv\Scripts\activate
 
-```bash
 pip install -r requirements.txt
-```
-
 (`requirements.txt`에는 `soundfile`, `numpy`, `scipy`, `tqdm`, `pandas` 등이 포함되어 있습니다.)
 
 - 시스템에 `yt-dlp`와 `ffmpeg` 설치 필수 (유튜브 다운로드 및 오디오 편집 도구)  
