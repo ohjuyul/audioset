@@ -1,51 +1,64 @@
-# audioset
-AudioSet Processing Pipeline
-이 프로젝트는 AudioSet 데이터셋 내 특정 라벨에 해당하는 유튜브 오디오 클립을 다운로드, 트리밍, 리샘플링하고, 최종 정보를 CSV로 정리하며, 라벨별 오디오 길이 통계까지 제공하는 파이썬 스크립트 모음입니다.
+AudioSet 오디오 처리 파이프라인
+유튜브 AudioSet 오디오 데이터를 쉽고 체계적으로 다운로드하고, 필요한 구간만큼 잘라내며, 리샘플링과 메타정보 추출, 통계 요약까지 한 번에 처리하는 파이썬 스크립트 모음입니다.
+복잡한 오디오 데이터 준비 과정을 단순화해, 분석과 연구에 집중할 수 있도록 돕습니다.
 
-파일 설명
-1. sound.py
-YouTube에서 AudioSet 클립을 다운로드하고 지정 구간으로 트리밍합니다.
+주요 기능
+1. sound.py — 오디오 다운로드 및 트리밍
+AudioSet 라벨을 기반으로 유튜브에서 오디오 클립을 다운로드합니다.
 
-ontology.json에서 라벨 이름과 ID를 불러와 data.txt의 라벨 ID 기반 클립 정보를 필터링합니다.
+다운로드한 원본 오디오는 full/ 폴더에 저장되고, 지정한 구간만큼 잘라낸 클립은 Result/ 폴더에 저장됩니다.
 
-명령어 예시:
+라벨과 클립 정보는 ontology.json, data.txt에서 불러와 사용합니다.
 
-bash
+예를 들어,
+
+nginx
 복사
 python sound.py --label "fire alarm" "explosion" --num 10 --exclude "speech"
-다운로드한 전체 오디오는 full/, 트리밍된 클립은 Result/ 폴더에 저장됩니다.
+이렇게 실행하면 "fire alarm"과 "explosion" 라벨 중에서 10개씩 다운로드하며, "speech" 라벨은 제외합니다.
 
-2. resample.py
-Result/ 폴더 내 WAV 파일을 읽어 최대 주파수를 추정한 후, 그에 맞게 샘플링 주파수를 조정하여 리샘플링합니다.
+2. resample.py — 최적화된 리샘플링
+Result/ 폴더 내 오디오 클립들을 불러와, 각 파일의 최대 주파수를 분석합니다.
 
-리샘플링 결과는 resample/ 폴더에 저장됩니다.
+그에 맞는 최적 샘플링 레이트로 리샘플링해 품질 저하를 최소화하고 파일 용량을 줄입니다.
 
-리샘플링 과정은 tqdm 진행 바를 통해 시각적으로 확인 가능.
+리샘플링된 파일은 resample/ 폴더에 저장되며, 진행 상황은 프로그래스바로 확인할 수 있습니다.
 
-3. information.py
-resample/ 폴더 내 WAV 파일들을 스캔하여 각 파일의 절대 경로, 라벨명, 길이(초), 샘플링 레이트 정보를 추출합니다.
+3. information.py — 메타정보 자동 추출
+리샘플링된 오디오 파일들을 스캔해, 절대 경로, 라벨명, 오디오 길이(초), 샘플링 레이트 정보를 CSV 파일로 정리합니다.
 
-결과는 result_info.csv 파일로 저장됩니다.
+라벨명은 파일명에서 자동 추출되어 수작업 없이 분류가 가능합니다.
 
-4. summerize.py
-information.py가 생성한 result_info.csv를 불러와 라벨별 오디오 길이 통계(개수, 평균, 분산, 최대, 최소)를 계산합니다.
+4. summerize.py — 라벨별 오디오 길이 통계
+생성된 CSV를 불러와, 라벨별 오디오 길이 통계를 계산합니다.
 
-전체 통계도 함께 포함되며, 결과는 콘솔 출력과 sum.csv 파일로 저장됩니다.
+통계항목은 개수, 평균, 분산, 최대/최소 길이를 포함하며, 전체 데이터 통계도 함께 출력합니다.
 
-전체 워크플로우
-sound.py 실행 → 특정 라벨 오디오 다운로드 및 구간별 트리밍
+결과는 콘솔 출력과 sum.csv 파일 저장으로 두 가지 방식으로 제공합니다.
 
-resample.py 실행 → Result/ 폴더 내 트리밍 오디오 리샘플링
+전체 작업 흐름 예시
+오디오 다운로드 및 트리밍
+원하는 라벨로 sound.py를 실행해 유튜브에서 오디오를 받고, 필요한 구간만큼 잘라냅니다.
 
-information.py 실행 → resample/ 폴더 내 오디오 메타정보 CSV 생성
+리샘플링
+resample.py로 Result/ 폴더 내 오디오들을 불러와 최적 샘플링 주파수로 변환합니다.
 
-summerize.py 실행 → CSV 기반 라벨별 오디오 길이 통계 생성 및 저장
+메타정보 생성
+information.py로 리샘플링된 파일들의 메타데이터(경로, 라벨, 길이, 샘플링 레이트)를 CSV로 정리합니다.
 
-환경 및 의존성
+통계 확인 및 저장
+summerize.py로 CSV를 분석해 라벨별 길이 분포를 확인하고, 결과를 파일로 저장합니다.
+
+설치 및 환경 준비
 Python 3.x
 
-필요 라이브러리: soundfile, numpy, scipy, tqdm, pandas
+필수 패키지 설치
 
-외부 도구: yt-dlp, ffmpeg (시스템에 설치되어 있어야 함)
+nginx
+복사
+pip install -r requirements.txt
+(requirements.txt에는 soundfile, numpy, scipy, tqdm, pandas 포함)
 
-ontology.json 및 data.txt 파일이 스크립트 실행 경로에 있어야 함
+시스템에 yt-dlp와 ffmpeg 설치 필수 (유튜브 다운로드 및 오디오 편집 도구)
+
+프로젝트 루트에 ontology.json과 data.txt 파일이 있어야 정상 작동
