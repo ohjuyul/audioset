@@ -67,12 +67,19 @@ Python 3.x
 
 ```bash
 python -m venv venv```
+
 macOS / Linux 활성화
-```source venv/bin/activate```
+
+```bash
+source venv/bin/activate```
+
 Windows (PowerShell) 활성화
-```.\venv\Scripts\activate```
+```bash
+.\venv\Scripts\activate```
+
 필수 패키지 설치
-```pip install -r requirements.txt```
+```bash
+pip install -r requirements.txt```
 
 
 requirements.txt에는 soundfile, numpy, scipy, tqdm, pandas 등이 포함되어 있습니다.
