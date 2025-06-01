@@ -58,8 +58,18 @@ python sound.py --label "fire alarm" "explosion" --num 10 --exclude "speech"
 ---
 
 ## 설치 및 환경 준비
+Python 3.x
 
-- Python 3.x  
+가상환경(venv)에서 작업하는 것을 권장합니다.
+
+```bash
+python -m venv venv
+
+# macOS/Linux
+source venv/bin/activate
+
+# Windows
+.\venv\Scripts\activate  
 - 필수 패키지 설치:
 
 ```bash
@@ -72,6 +82,3 @@ pip install -r requirements.txt
 - 프로젝트 루트에 `ontology.json`과 `data.txt` 파일이 있어야 정상 작동합니다.
 
 ---
-
-필요하시면 실행 방법이나 옵션에 관한 부분도 추가로 작성해 드릴 수 있습니다.  
-궁금한 점이나 요청 사항 있으면 언제든 편하게 말씀해 주세요!
