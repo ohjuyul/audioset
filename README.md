@@ -66,25 +66,29 @@ Python 3.x
 ### 가상환경 생성 및 활성화
 
 ```bash
-python -m venv venv```
+python -m venv venv
+```
 
 macOS / Linux 활성화
 
 ```bash
-source venv/bin/activate```
+source venv/bin/activate
+```
 
 Windows (PowerShell) 활성화
+
 ```bash
-.\venv\Scripts\activate```
+.\venv\Scripts\activate
+```
 
 필수 패키지 설치
+
 ```bash
-pip install -r requirements.txt```
+pip install -r requirements.txt
+```
 
+`requirements.txt`에는 `soundfile`, `numpy`, `scipy`, `tqdm`, `pandas` 등이 포함되어 있습니다.
 
-requirements.txt에는 soundfile, numpy, scipy, tqdm, pandas 등이 포함되어 있습니다.
-
-    시스템에 yt-dlp와 ffmpeg 설치 필수 (유튜브 다운로드 및 오디오 편집 도구)
-
-    프로젝트 루트에 ontology.json과 data.txt 파일이 있어야 정상 작동합니다.
+- 시스템에 `yt-dlp`와 `ffmpeg` 설치 필수 (유튜브 다운로드 및 오디오 편집 도구)  
+- 프로젝트 루트에 `ontology.json`과 `data.txt` 파일이 있어야 정상 작동합니다.
 
