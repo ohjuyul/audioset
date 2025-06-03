@@ -1,7 +1,7 @@
 import pandas as pd
 
-CSV_PATH = r"C:\Users\82102\Desktop\audioset\information\result_info.csv"
-SUMMARY_PATH = r"C:\Users\82102\Desktop\audioset\information\sum.csv"
+CSV_PATH = r"./information/result_info.csv"
+SUMMARY_PATH = r"./information/sum.csv"
 
 def main():
     df = pd.read_csv(CSV_PATH)
