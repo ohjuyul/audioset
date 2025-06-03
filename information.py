@@ -3,7 +3,7 @@ import csv
 import soundfile as sf
 
 SOURCE_DIR = "resample"
-CSV_PATH = r"C:\Users\82102\Desktop\audioset\information\result_info.csv"
+CSV_PATH = r"C:./information/result_info.csv"
 
 def extract_label_from_filename(filename):
     name = os.path.splitext(filename)[0]
