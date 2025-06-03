@@ -1,7 +1,9 @@
 import os
+import argparse
 import soundfile as sf
 import numpy as np
-from scipy.signal import resample_poly
+import torch
+import torchaudio
 from scipy.fft import rfft, rfftfreq
 from tqdm import tqdm
 
@@ -24,42 +26,77 @@ def estimate_max_frequency(data, sr, threshold=0.001):
             return freqs[i]
     return sr / 2
 
-def resample_audio(data, orig_sr, target_sr):
+def choose_target_sr(max_freq):
+    if max_freq <= 4000:
+        return 8000
+    elif max_freq <= 8000:
+        return 16000
+    elif max_freq <= 22000:
+        return 44100
+    elif max_freq <= 24000:
+        return 48000
+    else:
+        return 96000
+
+def resample_torch(data, orig_sr, target_sr):
     if orig_sr == target_sr:
         return data
-    gcd = np.gcd(orig_sr, target_sr)
-    up = target_sr // gcd
-    down = orig_sr // gcd
-    return resample_poly(data, up, down, axis=0)
+    waveform = torch.from_numpy(data.T).float()  # (channels, time)
+    resampler = torchaudio.transforms.Resample(orig_sr, target_sr)
+    resampled = resampler(waveform).numpy().T  # (time, channels)
+    return resampled
 
 def process_file(path, output_dir):
     try:
         data, sr = sf.read(path)
         max_freq = estimate_max_frequency(data, sr)
-        new_sr = int(np.ceil(max_freq * 2))
+        target_sr = choose_target_sr(max_freq)
 
-        resampled = resample_audio(data, sr, new_sr)
+        resampled = resample_torch(data, sr, target_sr)
 
         filename = os.path.basename(path)
         out_name = "re_" + filename
         out_path = os.path.join(output_dir, out_name)
 
-        sf.write(out_path, resampled, new_sr)
+        sf.write(out_path, resampled, target_sr)
     except Exception as e:
         print(f"Error processing {path}: {e}")
 
-def main():
-    os.makedirs(OUTPUT_DIR, exist_ok=True)
-    files = get_all_wav_files(SOURCE_DIR)
+def parse_args():
+    parser = argparse.ArgumentParser(description="Resample AudioSet clips by label.")
+    parser.add_argument("--label", type=str, nargs='+', required=True, help="One or more label names")
+    parser.add_argument("--num", required=True, help="Number of samples per label or 'all'")
+    return parser.parse_args()
 
-    if not files:
-        print("Result/ 폴더에 .wav 파일이 없습니다.")
+def filter_files_by_labels(files, labels):
+    filtered = []
+    labels = [label.lower().replace(" ", "_") for label in labels]
+    for label in labels:
+        for f in files:
+            if label in f.lower():
+                filtered.append(f)
+    return filtered
+
+def main():
+    args = parse_args()
+    os.makedirs(OUTPUT_DIR, exist_ok=True)
+
+    all_files = get_all_wav_files(SOURCE_DIR)
+    all_filenames = [os.path.basename(f) for f in all_files]
+
+    filtered_files = filter_files_by_labels(all_filenames, args.label)
+
+    if not filtered_files:
+        print("No matching wav files found for given labels.")
         return
 
-    for path in tqdm(files, desc="Resampling", ncols=100):
+    selected_files = filtered_files if args.num.lower() == "all" else filtered_files[:int(args.num)]
+    selected_paths = [os.path.join(SOURCE_DIR, f) for f in selected_files]
+
+    for path in tqdm(selected_paths, desc="Resampling", ncols=100):
         process_file(path, OUTPUT_DIR)
 
-    print(f"complete")
+    print(f"Completed resampling {len(selected_paths)} files.")
 
 if __name__ == "__main__":
     main()
